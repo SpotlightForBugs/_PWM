@@ -25,9 +25,9 @@ public class Generator {
       byte[] messageDigest = md.digest(input.getBytes());
       // convert the byte array to a string
       StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < messageDigest.length; i++) {
-        sb.append(Integer.toString((messageDigest[i] & 0xff) + 0x100, 16).substring(1));
-      }
+        for (byte b : messageDigest) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
       // return the string
       return sb.toString();
     } catch (NoSuchAlgorithmException e) {
