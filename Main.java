@@ -1,6 +1,7 @@
 class Main {
 
   public static void main(String[] args) {
-    Generator.test();
+    AccountCrypt.test();
+    Generator.main(args);
   }
 }
