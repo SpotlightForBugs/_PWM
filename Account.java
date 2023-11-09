@@ -6,9 +6,11 @@
  * 
  */
 public class Account {
+    private BinarysearchTree <Entry> enTree;
     //master password for the account
     private String masterPassword;
     //account name
     private String accountName;
+    
 }
     
