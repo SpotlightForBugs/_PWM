@@ -78,7 +78,7 @@ public class Account implements ComparableContent<Account> {
   private List<Entry> getEntries(BinarySearchTree<Entry> enTree, List<Entry> entryList) {
 
     //recursively traverse the tree and add each entry to the array
-    if (enTree.isEmpty()) {
+    if (enTree == null) {
         return entryList;
     }
     entryList.append(enTree.getContent());

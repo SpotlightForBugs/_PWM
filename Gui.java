@@ -131,6 +131,9 @@ public class Gui {
     private void showShowScreen(String username, String password) {
         Account account = pwm.getAccount(username, password);
         Entry[] entries = account.getEntriesAsArray();
+        for (Entry entry : entries) {
+            System.out.println(entry.getUsername());
+        }
         JFrame showFrame = new JFrame("Show");
         showFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         showFrame.setSize(400, 300);
@@ -150,7 +153,7 @@ public class Gui {
 
         String[] columnNames = {"Username", "Password", "Scope"};
         Object[][] rowData = new Object[entries.length][3];
-
+System.out.println(entries.length);
         for (int i = 0; i < entries.length; i++) {
             rowData[i][0] = entries[i].getUsername();
             System.out.println(entries[i].getUsername());

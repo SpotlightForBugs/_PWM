@@ -9,6 +9,7 @@ public class Entry implements ComparableContent<Entry> {
         this.scope.append(pScope); //like a website for example (e.g. google.com)
         this.username = pUsername;
         this.password = pPassword;
+        System.out.println("Entry created: " + this.username + " " + this.password + " " + getScopeAsString());
     }
 
     public String getUsername() {
