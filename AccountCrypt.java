@@ -25,9 +25,9 @@ public class AccountCrypt {
       byte[] messageDigest = md.digest(input.getBytes());
       // convert the byte array to a string
       StringBuffer sb = new StringBuffer();
-        for (byte b : messageDigest) {
-            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-        }
+      for (byte b : messageDigest) {
+        sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+      }
       // return the string
       return sb.toString();
     } catch (NoSuchAlgorithmException e) {
@@ -36,8 +36,6 @@ public class AccountCrypt {
       return null;
     }
   }
-
-
 
   public static void test() {
     System.out.println(hash("hello"));
