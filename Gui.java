@@ -159,7 +159,7 @@ public class Gui {
         JPanel showPanel = new JPanel(new BorderLayout());
 
         JLabel label = new JLabel("Entries:");
-        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         showPanel.add(label, BorderLayout.NORTH);
 
         String[] columnNames = {"Username", "Password", "Scope"};
