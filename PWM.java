@@ -56,13 +56,22 @@ public class PWM {
     public boolean login(String pAccountName, String pMasterPassword) {
         //returns true if the account exists and the password is correct, false otherwise
         Account account = new Account(pAccountName, pMasterPassword);
-        return this.accounts.search(account) != null;
+        return this.accounts.search(account) != null && this.accounts.search(account).isCorrectPassword(pMasterPassword);
     }
 
     public Account getAccount(String username, String password) {
         //returns the account if the account exists and the password is correct, null otherwise
         Account account = new Account(username, password);
         return this.accounts.search(account);
+    }
+
+    public void debug_print(){
+        //executes the debug_print method of each account
+        Account[] accountArray = getAccountsAsArray();
+        for (Account account : accountArray) {
+            account.debug_print();
+        }
+
     }
 
 }

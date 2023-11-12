@@ -1,14 +1,16 @@
 public class Entry implements ComparableContent<Entry> {
 
-    private String username;
+    private  String username;
     private String password;
+    public final Account account;
 
     private List<String> scope = new List<String>();
 
-    public Entry(String pUsername, String pPassword, String pScope) {
+    public Entry(String pUsername, String pPassword, String pScope, Account pOwner) {
         this.scope.append(pScope); //like a website for example (e.g. google.com)
         this.username = pUsername;
         this.password = pPassword;
+        this.account = pOwner;
         System.out.println("Entry created: " + this.username + " " + this.password + " " + getScopeAsString());
     }
 
@@ -24,10 +26,20 @@ public class Entry implements ComparableContent<Entry> {
         return this.scope;
     }
 
+    private int getScopeSize() {
+        int size = 0;
+        this.scope.toFirst();
+        while (this.scope.hasAccess()) {
+            size++;
+            this.scope.next();
+        }
+        return size;
+    }
+
 
     @Override
     public boolean isGreater(Entry pContent) {
-        return false;
+        return this.getScopeAsString().compareTo(pContent.getScopeAsString()) > 0;
     }
 
     /**
@@ -37,7 +49,7 @@ public class Entry implements ComparableContent<Entry> {
      */
     @Override
     public boolean isEqual(Entry pContent) {
-        return false;
+        return this.getScopeAsString().equals(pContent.getScopeAsString());
     }
 
     /**
@@ -47,16 +59,33 @@ public class Entry implements ComparableContent<Entry> {
      */
     @Override
     public boolean isLess(Entry pContent) {
-        return false;
+        return this.getScopeAsString().compareTo(pContent.getScopeAsString()) < 0;
     }
 
     public String getScopeAsString() {
-        String scopeString = "";
+        StringBuilder scopeString = new StringBuilder();
         this.scope.toFirst();
         while (this.scope.hasAccess()) {
-            scopeString += this.scope.getContent() + " ";
+            scopeString.append(this.scope.getContent()).append(" ");
             this.scope.next();
         }
-        return scopeString;
+        return scopeString.toString();
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setScope(String scope) {
+        this.scope = new List<String>();
+        this.scope.append(scope);
+    }
+
+    public Account getAccount() {
+        return this.account;
     }
 }

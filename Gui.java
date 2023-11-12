@@ -17,6 +17,11 @@ public class Gui {
     public Gui() {
         pwm.addAccount("test", "test");
         pwm.addAccount("","");
+        Account testAccount = pwm.getAccount("test", "test");
+        testAccount.addEntry("test", "test", "test");
+        testAccount.addEntry("test2", "test2", "test2");
+        testAccount.addEntry("test3", "test3", "test3");
+
     }
 
     private void startScreen() {
@@ -57,6 +62,7 @@ public class Gui {
             String password = new String(passwordField.getPassword());
             if (pwm.login(account, password)) {
                 showOverviewScreen(account, password);
+                pwm.debug_print();
             } else {
                 JOptionPane.showMessageDialog(frame, "Wrong username or password");
             }
@@ -116,6 +122,7 @@ public class Gui {
             String password_entry = passwordField.getText();
             String scope_entry = scopeField.getText();
             pwm.getAccount(username, password).addEntry(username_entry, password_entry, scope_entry);
+            pwm.debug_print();
             addFrame.dispose();
         });
         addPanel.add(addButton2);
@@ -138,13 +145,17 @@ public class Gui {
         showFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         showFrame.setSize(400, 300);
 
-        JPanel showPanel = displayPasswordList(entries, showFrame);
+        JPanel showPanel = displayPasswordList(entries, showFrame,pwm,username,password);
 
         showFrame.add(showPanel);
+
+
+
+
         showFrame.setVisible(true);
     }
 
-    private static JPanel displayPasswordList(Entry[] entries, JFrame showFrame) {
+    private static JPanel displayPasswordList(Entry[] entries, JFrame showFrame,PWM pwm,String username,String password) {
         JPanel showPanel = new JPanel(new BorderLayout());
 
         JLabel label = new JLabel("Entries:");
@@ -152,16 +163,16 @@ public class Gui {
         showPanel.add(label, BorderLayout.NORTH);
 
         String[] columnNames = {"Username", "Password", "Scope"};
-        Object[][] rowData = new Object[entries.length][3];
+        final Object[][][] rowData = {new Object[entries.length][3]};
 System.out.println(entries.length);
         for (int i = 0; i < entries.length; i++) {
-            rowData[i][0] = entries[i].getUsername();
+            rowData[0][i][0] = entries[i].getUsername();
             System.out.println(entries[i].getUsername());
-            rowData[i][1] = entries[i].getPassword();
-            rowData[i][2] = entries[i].getScopeAsString();
+            rowData[0][i][1] = entries[i].getPassword();
+            rowData[0][i][2] = entries[i].getScopeAsString();
         }
 
-        JTable table = new JTable(rowData, columnNames);
+        JTable table = new JTable(rowData[0], columnNames);
         table.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -189,6 +200,56 @@ System.out.println(entries.length);
             }
         });
         showPanel.add(copyButton, BorderLayout.EAST);
+
+        //add a listener to the table, to save changes to the entries when the user changes them and presses enter, and to delete entries when the user presses delete or backspace
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                //if the user has selected a row
+                if (table.getSelectedRow() != -1) {
+                    //if the user has pressed enter
+                    if (e.getValueIsAdjusting() && table.getSelectedColumn() != -1) {
+                        //save the changes to the entry
+                        Entry entry = entries[table.getSelectedRow()];
+                        String username = (String) table.getValueAt(table.getSelectedRow(), 0);
+                        String password = (String) table.getValueAt(table.getSelectedRow(), 1);
+                        String scope = (String) table.getValueAt(table.getSelectedRow(), 2);
+                        entry.setUsername(username);
+                        entry.setPassword(password);
+                        entry.setScope(scope);
+                        //update the table
+                        rowData[0][table.getSelectedRow()][0] = username;
+                        rowData[0][table.getSelectedRow()][1] = password;
+                        rowData[0][table.getSelectedRow()][2] = scope;
+                        table.repaint();
+                        System.out.println("saved");
+                    }
+                    //if the user has pressed delete or backspace
+                    if (e.getValueIsAdjusting() && table.getSelectedColumn() == -1) {
+                        //delete the entry
+                        Entry entry = entries[table.getSelectedRow()];
+                        Account account = entry.getAccount(); //get the account of the entry
+                        account.deleteEntry(entry);
+                        //update the table
+                        rowData[0] = new Object[entries.length][3];
+                        for (int i = 0; i < entries.length; i++) {
+                            rowData[0][i][0] = entries[i].getUsername();
+                            rowData[0][i][1] = entries[i].getPassword();
+                            rowData[0][i][2] = entries[i].getScopeAsString();
+                        }
+                        table.repaint();
+                        System.out.println("deleted");
+                    }
+                }
+            }
+        });
+        JButton export_as_json = new JButton("Export as JSON");
+        export_as_json.addActionListener(e -> {
+            pwm.getAccount(username, password).saveAsJSON("username_export_("+username+").json");
+        });
+        showPanel.add(export_as_json, BorderLayout.WEST);
+
+
 
         return showPanel;
     }
