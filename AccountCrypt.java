@@ -37,7 +37,12 @@ public class AccountCrypt {
     }
   }
 
-
+public static boolean verify(String password, String hashedPassword, String accountName) {
+    // hash the password
+    String hashed = generate(password, accountName);
+    // compare the hashes
+    return hashed.equals(hashedPassword);
+  }
 
   public static void test() {
     System.out.println(hash("hello"));

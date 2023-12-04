@@ -11,6 +11,8 @@ public class Account implements ComparableContent<Account> {
     private BinarySearchTree<Entry> enTree; //contains all the username/password pairs
     // master password for the account
     private String masterPassword;
+
+    private String hashedPassword;
     // account name
     private String accountName;
 
@@ -20,6 +22,7 @@ public class Account implements ComparableContent<Account> {
         // constructor
         this.accountName = pAccountName;
         this.masterPassword = pMasterPassword;
+        this.hashedPassword = AccountCrypt.generate(pMasterPassword, pAccountName);
         this.enTree = new BinarySearchTree<Entry>();
     }
 
@@ -31,7 +34,7 @@ public class Account implements ComparableContent<Account> {
 
     @Override
     public boolean isEqual(Account pContent) {
-        return this.accountName.equals(pContent.accountName) && this.masterPassword.equals(pContent.masterPassword);
+        return this.hashedPassword.equals(pContent.hashedPassword);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class Account implements ComparableContent<Account> {
 
     public boolean isCorrectPassword(String pPassword) {
         //returns the password if the password is correct, null otherwise
-        return pPassword.equals(this.masterPassword);
+        return AccountCrypt.verify(pPassword, this.hashedPassword, this.accountName);
     }
 
     public void addEntry(String pUsername, String pPassword, String pScope) {
