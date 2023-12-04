@@ -25,9 +25,9 @@ public class AccountCrypt {
       byte[] messageDigest = md.digest(input.getBytes());
       // convert the byte array to a string
       StringBuffer sb = new StringBuffer();
-        for (byte b : messageDigest) {
-            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-        }
+      for (byte b : messageDigest) {
+        sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+      }
       // return the string
       return sb.toString();
     } catch (NoSuchAlgorithmException e) {
@@ -37,7 +37,7 @@ public class AccountCrypt {
     }
   }
 
-public static boolean verify(String password, String hashedPassword, String accountName) {
+  public static boolean verify(String password, String hashedPassword, String accountName) {
     // hash the password
     String hashed = generate(password, accountName);
     // compare the hashes
