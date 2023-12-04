@@ -13,7 +13,7 @@ public class Gui {
     private JPanel panel;
     private JTextField accountField;
     private JPasswordField passwordField;
-
+    private Generator gen = new Generator();
     public Gui() {
         pwm.addAccount("test", "test");
         pwm.addAccount("","");
@@ -133,7 +133,14 @@ public class Gui {
 
         addFrame.add(addPanel);
         addFrame.setVisible(true);
+
+        
     }
+    
+    JButton generateButton = new JButton("Generate");
+        generateButton.addActionListener(e -> {;
+          passwordField.setText(gen.generate((int)(Math.random()*15+5),true,true,true,true)+"");
+          });
 
     private void showShowScreen(String username, String password) {
         Account account = pwm.getAccount(username, password);
