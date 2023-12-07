@@ -5,7 +5,10 @@
 import java.io.*;
 
 /**
- *
+    * Account
+    * The account class contains all the entries of the account and the master password
+    * It also contains methods to add, delete and get entries
+    * It also contains methods to save the account as a JSON file
  */
 public class Account implements ComparableContent<Account> {
     private BinarySearchTree<Entry> enTree; //contains all the username/password pairs
@@ -51,6 +54,13 @@ public class Account implements ComparableContent<Account> {
         return AccountCrypt.verify(pPassword, this.hashedPassword, this.accountName);
     }
 
+    /**
+     * adds an entry to the account
+     * @param pUsername the username of the entry
+     * @param pPassword the password of the entry
+     * @param pScope the scope of the entry
+     * 
+     */
     public void addEntry(String pUsername, String pPassword, String pScope) {
         //adds an entry to the account
         Entry newEntry = new Entry(pUsername, pPassword, pScope, this);
@@ -58,6 +68,10 @@ public class Account implements ComparableContent<Account> {
     }
 
 
+    /**
+     * getEntriesAsArray
+     * @return the entries as an array of entries
+     */
     public Entry[] getEntriesAsArray() {
 
         List<Entry> entries = getEntries();
@@ -80,12 +94,20 @@ public class Account implements ComparableContent<Account> {
 
     }
 
+    /**
+     * getEntries
+     * @return the List of entries, starts the recursive method
+     */
     private List<Entry> getEntries() {
         this.entryList = new List<Entry>();
         getEntries(this.enTree);
         return this.entryList;
     }
 
+    /**
+     * getEntries
+     * @param enTree the tree to get the entries from
+     */
     private void getEntries(BinarySearchTree<Entry> enTree) {
 
         //recursively traverse the tree and add each entry to the array
@@ -99,6 +121,10 @@ public class Account implements ComparableContent<Account> {
         }
     }
 
+    /**
+     * debug_print
+     * prints the account to the console and its entries (for debugging purposes)
+     */
     public void debug_print() {
         System.out.println("Account: " + this.accountName + " " + this.masterPassword);
         Entry[] entries = getEntriesAsArray();
@@ -107,10 +133,18 @@ public class Account implements ComparableContent<Account> {
         }
     }
 
+    /**
+     * deletes an entry from the account
+     * @param entry the entry to delete
+     */
     public void deleteEntry(Entry entry) {
         this.enTree.remove(entry);
     }
 
+    /**
+     * saves the account as a JSON file and prints it to the console
+     * @param fileName the name of the file to save the account to
+     */
     public void saveAsJSON(String fileName) {
         List<Entry> entries = getEntries();
         StringBuilder json = new StringBuilder("{\n" +

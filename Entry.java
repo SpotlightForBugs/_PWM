@@ -13,19 +13,34 @@ public class Entry implements ComparableContent<Entry> {
         this.account = pOwner;
         System.out.println("Entry created: " + this.username + " " + this.password + " " + getScopeAsString());
     }
-
+    /**
+     * 
+     * @return the username of the entry
+     */
     public String getUsername() {
         return this.username;
     }
 
+    /**
+     * 
+     * @return the password of the entry
+     */
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * 
+     * @return the scope of the entry
+     */
     public List<String> getScope() {
         return this.scope;
     }
 
+    /**
+     * 
+     * @return the scope of the entry as a String
+     */
     private int getScopeSize() {
         int size = 0;
         this.scope.toFirst();

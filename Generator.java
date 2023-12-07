@@ -1,5 +1,6 @@
 import java.security.SecureRandom;
 
+
 public class Generator {
 
     // Characters for generating passwords
@@ -8,7 +9,16 @@ public class Generator {
     private static final String DIGITS = "0123456789";
     private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:,.<>?";
 
-    // Generate a password
+    /**
+     * Generates a password based on the given criteria
+     * @param length
+     * @param mixedCase
+     * @param specialCharacters
+     * @param allowNumbers
+     * @param withDashes
+     * @return the generated password as a String
+     */
+
     public String generate(int length, boolean mixedCase, boolean specialCharacters, boolean allowNumbers, boolean withDashes) {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
