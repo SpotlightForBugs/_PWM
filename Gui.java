@@ -13,16 +13,20 @@ public class Gui {
     private JPanel panel;
     private JTextField accountField;
     private JPasswordField passwordField;
+    private Generator gen = new Generator();
 
     public Gui() {
+
+
+        gen.generate((int)(Math.random()*15+5),true,true,true,true);
         pwm.addAccount("test", "test");
         pwm.addAccount("","");
         Account testAccount = pwm.getAccount("test", "test");
         testAccount.addEntry("test", "test", "test");
         testAccount.addEntry("test2", "test2", "test2");
-        testAccount.addEntry("test3", "test3", "test3");
+        testAccount.addEntry("test3", "test3", "test3");}
 
-    }
+         
 
     private void startScreen() {
         frame = new JFrame("Password Manager");
@@ -95,7 +99,8 @@ public class Gui {
         JFrame addFrame = new JFrame("Add");
         addFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addFrame.setSize(300, 300);
-
+    
+        
         JPanel addPanel = new JPanel(new GridLayout(5, 1));
 
         JLabel label = new JLabel("Enter your username:");
@@ -106,7 +111,7 @@ public class Gui {
 
         JLabel label2 = new JLabel("Enter your password:");
         addPanel.add(label2);
-
+        
         JTextField passwordField = new JTextField(20);
         addPanel.add(passwordField);
 
@@ -119,7 +124,7 @@ public class Gui {
         JButton addButton2 = new JButton("Add");
         addButton2.addActionListener(e -> {
             String username_entry = usernameField.getText();
-            String password_entry = passwordField.getText();
+            String password_entry = passwordField.getText();                                                                                                                                     
             String scope_entry = scopeField.getText();
             pwm.getAccount(username, password).addEntry(username_entry, password_entry, scope_entry);
             pwm.debug_print();
@@ -130,7 +135,12 @@ public class Gui {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> addFrame.dispose());
         addPanel.add(cancelButton);
-
+    
+         JButton generateButton = new JButton("Generate");
+        generateButton.addActionListener(e -> {;
+          passwordField.setText(gen.generate((int)(Math.random()*15+5),true,true,true,true)+"");
+          });
+        addPanel.add(generateButton);
         addFrame.add(addPanel);
         addFrame.setVisible(true);
     }
@@ -176,8 +186,8 @@ System.out.println(entries.length);
         table.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        showPanel.add(scrollPane, BorderLayout.CENTER);
-
+        showPanel.add(scrollPane, BorderLayout.CENTER);                             
+        
         JButton okayButton = new JButton("Okay");
         okayButton.addActionListener(e -> showFrame.dispose());
         showPanel.add(okayButton, BorderLayout.SOUTH);

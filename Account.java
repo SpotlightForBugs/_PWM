@@ -1,7 +1,6 @@
 // Account part of the password manager
 // Last modified: 9.11.2023
 
-
 import java.io.*;
 
 /**
@@ -11,48 +10,48 @@ import java.io.*;
     * It also contains methods to save the account as a JSON file
  */
 public class Account implements ComparableContent<Account> {
-    private BinarySearchTree<Entry> enTree; //contains all the username/password pairs
-    // master password for the account
-    private String masterPassword;
+  private BinarySearchTree<Entry> enTree; // contains all the username/password pairs
+  // master password for the account
+  private String masterPassword;
 
-    private String hashedPassword;
-    // account name
-    private String accountName;
+  private String hashedPassword;
+  // account name
+  private String accountName;
 
-    private List<Entry> entryList = new List<Entry>();
+  private List<Entry> entryList = new List<Entry>();
 
-    public Account(String pAccountName, String pMasterPassword) {
-        // constructor
-        this.accountName = pAccountName;
-        this.masterPassword = pMasterPassword;
-        this.hashedPassword = AccountCrypt.generate(pMasterPassword, pAccountName);
-        this.enTree = new BinarySearchTree<Entry>();
-    }
+  public Account(String pAccountName, String pMasterPassword) {
+    // constructor
+    this.accountName = pAccountName;
+    this.masterPassword = pMasterPassword;
+    this.hashedPassword = AccountCrypt.generate(pMasterPassword, pAccountName);
+    this.enTree = new BinarySearchTree<Entry>();
+  }
 
-    @Override
-    public boolean isGreater(Account pContent) {
-        //account names are unique
-        return this.accountName.compareTo(pContent.accountName) > 0;
-    }
+  @Override
+  public boolean isGreater(Account pContent) {
+    // account names are unique
+    return this.accountName.compareTo(pContent.accountName) > 0;
+  }
 
-    @Override
-    public boolean isEqual(Account pContent) {
-        return this.hashedPassword.equals(pContent.hashedPassword);
-    }
+  @Override
+  public boolean isEqual(Account pContent) {
+    return this.hashedPassword.equals(pContent.hashedPassword);
+  }
 
-    @Override
-    public boolean isLess(Account pContent) {
-        return this.accountName.compareTo(pContent.accountName) < 0;
-    }
+  @Override
+  public boolean isLess(Account pContent) {
+    return this.accountName.compareTo(pContent.accountName) < 0;
+  }
 
-    public String getAccountName() {
-        return accountName;
-    }
+  public String getAccountName() {
+    return accountName;
+  }
 
-    public boolean isCorrectPassword(String pPassword) {
-        //returns the password if the password is correct, null otherwise
-        return AccountCrypt.verify(pPassword, this.hashedPassword, this.accountName);
-    }
+  public boolean isCorrectPassword(String pPassword) {
+    // returns the password if the password is correct, null otherwise
+    return AccountCrypt.verify(pPassword, this.hashedPassword, this.accountName);
+  }
 
     /**
      * adds an entry to the account
@@ -74,25 +73,24 @@ public class Account implements ComparableContent<Account> {
      */
     public Entry[] getEntriesAsArray() {
 
-        List<Entry> entries = getEntries();
-        //count the number of entries using a while loop
-        int count = 0;
-        entries.toFirst();
-        while (entries.hasAccess()) {
-            count++;
-            entries.next();
-        }
-        //create an array of the correct size
-        Entry[] entryArray = new Entry[count];
-        //add each entry to the array using a for loop
-        entries.toFirst();
-        for (int i = 0; i < count; i++) {
-            entryArray[i] = entries.getContent();
-            entries.next();
-        }
-        return entryArray;
-
+    List<Entry> entries = getEntries();
+    // count the number of entries using a while loop
+    int count = 0;
+    entries.toFirst();
+    while (entries.hasAccess()) {
+      count++;
+      entries.next();
     }
+    // create an array of the correct size
+    Entry[] entryArray = new Entry[count];
+    // add each entry to the array using a for loop
+    entries.toFirst();
+    for (int i = 0; i < count; i++) {
+      entryArray[i] = entries.getContent();
+      entries.next();
+    }
+    return entryArray;
+  }
 
     /**
      * getEntries
@@ -110,16 +108,16 @@ public class Account implements ComparableContent<Account> {
      */
     private void getEntries(BinarySearchTree<Entry> enTree) {
 
-        //recursively traverse the tree and add each entry to the array
+    // recursively traverse the tree and add each entry to the array
 
-        this.entryList.append(enTree.getContent());
-        if (enTree.getLeftTree() != null) {
-            getEntries(enTree.getLeftTree());
-        }
-        if (enTree.getRightTree() != null) {
-            getEntries(enTree.getRightTree());
-        }
+    this.entryList.append(enTree.getContent());
+    if (enTree.getLeftTree() != null) {
+      getEntries(enTree.getLeftTree());
     }
+    if (enTree.getRightTree() != null) {
+      getEntries(enTree.getRightTree());
+    }
+  }
 
     /**
      * debug_print
@@ -152,32 +150,37 @@ public class Account implements ComparableContent<Account> {
                 "  \"masterPassword\": \"" + this.masterPassword + "\",\n" +
                 "  \"entries\": [\n");
 
-        entries.toFirst();
-        while (entries.hasAccess()) {
-            json.append("    {\n" + "      \"username\": \"").append(entries.getContent().getUsername()).append("\",\n").append("      \"password\": \"").append(entries.getContent().getPassword()).append("\",\n").append("      \"scope\": \"").append(entries.getContent().getScopeAsString()).append("\"\n").append("    }");
+    entries.toFirst();
+    while (entries.hasAccess()) {
+      json.append("    {\n" + "      \"username\": \"")
+          .append(entries.getContent().getUsername())
+          .append("\",\n")
+          .append("      \"password\": \"")
+          .append(entries.getContent().getPassword())
+          .append("\",\n")
+          .append("      \"scope\": \"")
+          .append(entries.getContent().getScopeAsString())
+          .append("\"\n")
+          .append("    }");
 
-            entries.next();
-            if (entries.hasAccess()) {
-                json.append(",\n");
-            } else {
-                json.append("\n");
-            }
-        }
-
-        json.append("  ]\n").append("}");
-
-        System.out.println(json.toString());
-
-        try {
-            FileWriter fileWriter = new FileWriter(fileName);
-            fileWriter.write(json.toString());
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+      entries.next();
+      if (entries.hasAccess()) {
+        json.append(",\n");
+      } else {
+        json.append("\n");
+      }
     }
 
+    json.append("  ]\n").append("}");
 
+    System.out.println(json.toString());
 
-
+    try {
+      FileWriter fileWriter = new FileWriter(fileName);
+      fileWriter.write(json.toString());
+      fileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
